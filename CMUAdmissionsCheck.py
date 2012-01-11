@@ -21,7 +21,10 @@ gmail_user = 'YOUR_GMAIL_Username@gmail.com'
 gmail_pwd = 'YOUR GMAIL PASSWORD'
 gmail_to = 'email@email.com'
 
-#Don't alter anything below this line.
+#don't touch anything below here
+
+from time import localtime, strftime
+
 def mail(to, subject, text):
 	msg = MIMEMultipart()
 	msg['From'] = gmail_user
@@ -43,20 +46,21 @@ if __name__ == "__main__":
   while not sleep(update_interval):
     try:
       post_values = urllib.urlencode({"VAR1":admissionID, "VAR2":lastName, "VAR3":birthdate})
-      request = urllib2.urlopen('https://www.as.cmu.edu/application/display.formproc?FUNCNAME=now_enrolling&ARGNUM=3',post_values)
+      request = urllib2.urlopen('https://www.as.cmu.edu/application//display.formproc?FUNCNAME=now_enrolling&ARGNUM=3',post_values)
       html = request.read()
       if html != old_html and old_html != "":
-        print "Online App Changed: YES"   
-        mail(gmail_user, "CMU Status Change", "Your status has changed on the CMU site. https://www.as.cmu.edu/application//display.html )
+      	current = strftime("%I:%M:%S %p - %m/%d/%y", localtime())
+        print "Online App Changed: YES -",current
+        mail(gmail_user, "CMU Status Change", "Your status has changed on the CMU site. https://www.as.cmu.edu/application/display.html")
         old_html = html
       elif old_html == "": 
-      	print "First Time Checking"
-       # for debugging purposes.
-       # print html
-       # mail(gmail_user, "First Check", "The script has started. <br> Direct Link: https://www.as.cmu.edu/application//display.html")
+      	current = strftime("%I:%M:%S %p - %m/%d/%y", localtime())
+      	print "First Time Checking    -",current
+      #  mail(gmail_user, "First Check", "The script has started. <br> Direct Link: http://sumukhsridhara.com/labs/cmu/status.php")
       	old_html = html
       else:
-      	print "Online App Changed: NO"
+      	current = strftime("%I:%M:%S %p - %m/%d/%y", localtime())
+      	print "Online App Changed: NO -",current
       	old_html = html
     except:
       print 'Error! Retrying now.'
